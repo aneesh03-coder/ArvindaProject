@@ -1,15 +1,25 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import EditRoundedIcon from '@material-ui/icons/EditRounded';
-import "./FeedbackSummary.css"
+import {useDispatch,useSelector} from "react-redux";
+import {selectUserInfo} from "../reducers/userInfo";
+import RenderData from "./RenderData";
+import "./FeedbackSummary.css";
 const FeedbackSummary = () => {
+  let userInfo=useSelector(selectUserInfo);
+  const dispatch=useDispatch();
   const [response, setResponse] = useState([]);
   useEffect(() => {
     //Axios call
-     axios.get("http://localhost:5000/feedback_summary").then((res) => {
-       console.log("successfully received ",res  );
-       setResponse(res.data);
-     });
+    //  axios.get("http://localhost:5000/feedback_summary").then((res) => {
+    //    console.log("successfully received ",res  );
+    //    setResponse(res.data);
+    //  });
+   
+
+    dispatch({type:"FETCH_USER_INFO"});    
+    // setResponse(userInfo);
+    
   }, []);
   const showModal=(id)=>{
     console.log("This is working fine"+id);
@@ -18,9 +28,14 @@ const FeedbackSummary = () => {
     document.getElementById("edit__courseName").value=row.cells[1].innerHTML;
     document.getElementById("edit__rating").value=row.cells[2].innerHTML;
     document.getElementById("edit__comment").value=row.cells[3].innerHTML;
+    document.getElementById("unique_id").value=id;
+    console.log(`This is working`);
+    console.log(document.getElementById("unique_id").value);
     $('#myModal').modal('show');
 
   }
+ 
+ 
   return (
     
     <div className="summary">
@@ -64,6 +79,7 @@ const FeedbackSummary = () => {
           <input type="text" placeholder="Course Name" id="edit__courseName"/>
           <input type="text" placeholder="Rating" id="edit__rating"/>
           <input type="text" placeholder="Comments" id="edit__comment"/>
+          <input type="text" hidden id="unique_id"/>
         </form>
       </div>
       <div class="modal-footer">
@@ -73,6 +89,7 @@ const FeedbackSummary = () => {
     </div>
   </div>
 </div>
+  <RenderData fn={setResponse} />
     </div>
  
   );
